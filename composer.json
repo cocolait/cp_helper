@@ -1,0 +1,33 @@
+{
+    "name": "cocolait/cp_helper",
+    "description": "A common extension library",
+    "type": "library",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "license": "mit",
+    "authors": [
+        {
+            "name": "cocolait",
+            "email": "enkipen@qq.com"
+        }
+    ],
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "stable",
+    "autoload" : {
+        "psr-4" : {
+            "cocolait\\helper\\" : "src/"
+        },
+        "files" : [
+            "src/helper.php"
+        ]
+    }
+}
