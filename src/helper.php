@@ -29,12 +29,12 @@ if (!function_exists('p')) {
     }
 }
 
-if (!function_exists('display_p')) {
+if (!function_exists('cp_display_p')) {
     /**
      * 格式化打印数据
      * @param $data 需要打印的数据
      */
-    function display_p($data){
+    function cp_display_p($data){
         header("Content-type:text/html;charset=utf-8");
         echo "<pre>";
         var_export($data);
@@ -42,13 +42,13 @@ if (!function_exists('display_p')) {
     }
 }
 
-if (!function_exists('object2array')) {
+if (!function_exists('cp_object2array')) {
     /**
      * 对象转换为数组
      * @param $object
      * @return mixed
      */
-    function object2array($object) {
+    function cp_object2array($object) {
         if (is_object($object)) {
             foreach ($object as $key => $value) {
                 $array[$key] = $value;
@@ -61,7 +61,7 @@ if (!function_exists('object2array')) {
     }
 }
 
-if (!function_exists('think_encrypt')) {
+if (!function_exists('cp_think_encrypt')) {
     /**
      * 系统加密方法
      * @param string $data 要加密的字符串
@@ -70,7 +70,7 @@ if (!function_exists('think_encrypt')) {
      * @return string
      * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
-    function think_encrypt($data, $key = '', $expire = 0) {
+    function cp_think_encrypt($data, $key = '', $expire = 0) {
         $md5_key  = 'http://www.cocolait.cn';
         $key  = md5(empty($key) ? $md5_key : $key);
         $data = base64_encode($data);
@@ -94,7 +94,7 @@ if (!function_exists('think_encrypt')) {
     }
 }
 
-if (!function_exists('think_decrypt')) {
+if (!function_exists('cp_think_decrypt')) {
     /**
      * 系统解密方法
      * @param  string $data 要解密的字符串 （必须是think_encrypt方法加密的字符串）
@@ -102,7 +102,7 @@ if (!function_exists('think_decrypt')) {
      * @return string
      * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
-    function think_decrypt($data, $key = ''){
+    function cp_think_decrypt($data, $key = ''){
         $md5_key  = 'http://www.cocolait.cn';
         $key    = md5(empty($key) ? $md5_key : $key);
         $data   = str_replace(array('-','_'),array('+','/'),$data);
@@ -139,25 +139,25 @@ if (!function_exists('think_decrypt')) {
     }
 }
 
-if (!function_exists('encrypt_password')) {
+if (!function_exists('cp_encrypt_password')) {
     /**
      * 密码加密方法
      * @param string $pw 要加密的字符串
      * @return string
      */
-    function encrypt_password($pw,$authcode='http://www.cocolait.cn'){
+    function cp_encrypt_password($pw,$authcode='http://www.cocolait.cn'){
         return md5(md5(md5($authcode . $pw)));
     }
 }
 
-if (!function_exists('compare_password')) {
+if (!function_exists('cp_compare_password')) {
     /**
      * 密码比较方法
      * @param string $password 要比较的密码
      * @param string $password_in_db 数据库保存的已经加密过的密码
      * @return boolean 密码相同，返回true
      */
-    function compare_password($password,$password_in_db){
+    function cp_compare_password($password,$password_in_db){
         if (encrypt_password($password) == $password_in_db) {
             return true;
         } else {
@@ -167,26 +167,26 @@ if (!function_exists('compare_password')) {
 }
 
 
-if (!function_exists('keyWrods_replace')) {
+if (!function_exists('cp_keyWrods_replace')) {
     /**
      * 替换关键字并且写入样式
      * @param $keywords 查询的关键字
      * @param $content  查询的内容
      * @return mixed
      */
-    function keyWrods_replace($keywords,$content){
+    function cp_keyWrods_replace($keywords,$content){
         $str = "<span style='color: #D2322D;font-weight: 700;'>{$keywords}</span>";
         return str_replace($keywords,$str,$content);
     }
 }
 
-if (!function_exists('time_format')) {
+if (!function_exists('cp_time_format')) {
     /**
      * 格式化时间
      * @param $time
      * @return bool|string
      */
-    function time_format($time){
+    function cp_time_format($time){
         //获取当前时间
         $now = time();
         //今天零时零分零秒
@@ -215,13 +215,13 @@ if (!function_exists('time_format')) {
     }
 }
 
-if (!function_exists('isMobile')) {
+if (!function_exists('cp_isMobile')) {
     /**
      * 验证手机
      * @param string $subject
      * @return boolean
      */
-    function isMobile($subject = '') {
+    function cp_isMobile($subject = '') {
         $pattern = "/0?(13|14|15|18)[0-9]{9}/";
         if (preg_match($pattern, $subject)) {
             return true;
@@ -230,13 +230,13 @@ if (!function_exists('isMobile')) {
     }
 }
 
-if (!function_exists('isEmail')) {
+if (!function_exists('cp_isEmail')) {
     /**
      * 验证是否是邮箱
      * @param  string  $email 邮箱
      * @return boolean        是否是邮箱
      */
-    function isEmail($email){
+    function cp_isEmail($email){
         if(filter_var($email,FILTER_VALIDATE_EMAIL)){
             return true;
         }else{
@@ -245,13 +245,13 @@ if (!function_exists('isEmail')) {
     }
 }
 
-if (!function_exists('is_url')) {
+if (!function_exists('cp_is_url')) {
     /**
      * 验证是否是URL地址
      * @param  string  $email 邮箱
      * @return boolean  是否是邮箱
      */
-    function is_url($url){
+    function cp_is_url($url){
         if(filter_var($url,FILTER_VALIDATE_URL)){
             return true;
         }else{
@@ -261,13 +261,13 @@ if (!function_exists('is_url')) {
 }
 
 
-if (!function_exists('is_ip')) {
+if (!function_exists('cp_is_ip')) {
     /**
      * 验证是否是URL地址
      * @param  string  $email 邮箱
      * @return boolean  是否是邮箱
      */
-    function is_ip($ip){
+    function cp_is_ip($ip){
         if(filter_var($ip,FILTER_VALIDATE_IP)){
             return true;
         }else{
@@ -276,13 +276,13 @@ if (!function_exists('is_ip')) {
     }
 }
 
-if (!function_exists('replace_phone')) {
+if (!function_exists('cp_replace_phone')) {
     /**
      * 替换手机号码
      * @param $str
      * @return string
      */
-    function replace_phone($str){
+    function cp_replace_phone($str){
         $start = substr($str,0,3);
         $end = substr($str,-4);
         return $start . "****" . $end;
@@ -290,13 +290,13 @@ if (!function_exists('replace_phone')) {
 }
 
 
-if (!function_exists('cutEmailUrl')) {
+if (!function_exists('cp_cutEmailUrl')) {
     /**
      * 截取邮箱@后面的内容 替换对应的登录地址
      * @param $email
      * @return bool
      */
-    function cutEmailUrl($email){
+    function cp_cutEmailUrl($email){
         if (!is_string($email)) return false;
         $oldStr = substr($email,strrpos($email,"@"));
         $str = substr($oldStr,1);
@@ -316,7 +316,7 @@ if (!function_exists('cutEmailUrl')) {
     }
 }
 
-if (!function_exists('randomFloat')) {
+if (!function_exists('cp_randomFloat')) {
     /**
      * 随机生成0~0.1之间的数,并且保留指定位数
      * @param int $min 最小值
@@ -325,7 +325,7 @@ if (!function_exists('randomFloat')) {
      * @param int $type 返回类型 true ：四舍五入制返回指定位数 false : 不是四舍五入
      * @return string
      */
-    function randomFloat($num = 2, $type = true, $min = 0, $max = 0.1) {
+    function cp_randomFloat($num = 2, $type = true, $min = 0, $max = 0.1) {
         $rand = $min + mt_rand() / mt_getrandmax() * ($max - $min);
         if ($type === true) {
             // 四舍五入 保留指定位数
@@ -338,26 +338,26 @@ if (!function_exists('randomFloat')) {
     }
 }
 
-if (!function_exists('mbs_strlen')) {
+if (!function_exists('cp_mbs_strlen')) {
     /**
      * 计算中英文字符长度
      * @param $str
      * @return int
      */
-    function mbs_strlen($str){
+    function cp_mbs_strlen($str){
         preg_match_all("/./us", $str, $matches);
         return count(current($matches));
     }
 }
 
 
-if (!function_exists('checkEvenNum')) {
+if (!function_exists('cp_checkEvenNum')) {
     /**
      * 检测数字是否为偶数
      * @param $num 数值
      * @return bool
      */
-    function checkEvenNum($num)
+    function cp_checkEvenNum($num)
     {
         if((abs($num)+2)%2==1){
             return false;
@@ -367,14 +367,14 @@ if (!function_exists('checkEvenNum')) {
     }
 }
 
-if (!function_exists('isArraySame')) {
+if (!function_exists('cp_isArraySame')) {
     /**
      * 比较2个数组是否相等 二维数组
      * @param $arr1 数组1
      * @param $arr2 数组2
      * @return bool
      */
-    function isArraySame ($arr1,$arr2){
+    function cp_isArraySame ($arr1,$arr2){
         foreach ($arr1 as $key => $v) {
             if(isset($arr2[$key])){
                 if($arr2[$key] !=  $arr1[$key]){
@@ -388,7 +388,7 @@ if (!function_exists('isArraySame')) {
     }
 }
 
-if (!function_exists('array_sort')) {
+if (!function_exists('cp_array_sort')) {
     /**
      * 二维数组 指定字段排序
      * @param $array  要排序的数组
@@ -396,7 +396,7 @@ if (!function_exists('array_sort')) {
      * @param $type   排序类型[asc or desc]
      * @return array  排好序的数组
      */
-    function array_sort($array,$row,$type){
+    function cp_array_sort($array,$row,$type){
         $array_temp = array();
         foreach($array as $v){
             $array_temp[$v[$row]] = $v;
@@ -411,7 +411,7 @@ if (!function_exists('array_sort')) {
     }
 }
 
-if (!function_exists('get_ip_info')) {
+if (!function_exists('cp_get_ip_info')) {
     /**
      * 获取ip的详细信息
      * 163.125.127.241
@@ -420,7 +420,7 @@ if (!function_exists('get_ip_info')) {
      * @param $ip ip地址
      * @return mixed
      */
-    function get_ip_info($ip)
+    function cp_get_ip_info($ip)
     {
         // 淘宝开源api 淘宝IP地址库
         $taobaoUrl = 'http://ip.taobao.com/service/getIpInfo.php?ip=' . $ip;
