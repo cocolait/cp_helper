@@ -18,8 +18,8 @@ final class CpEmail{
      * @param array $mail_option 配置参数 [
         'send_name' => '',                  //必填项 发送人的名称
         'host' => '',                       //必填项 设置SMTP服务器
-        'username' => 'chenpeng@mgchen.com',//必填项 邮箱登录用户名
-        'password' => 'Cp20170530',         //必填项 密码
+        'username' => '',                   //必填项 邮箱登录用户名
+        'password' => '',                   //必填项 密码
         'smtp_secure' => 'tls',             //可选填 加密方式 'tls' 或者 'ssl' 默认是 tls
         'port' => 25                        //可选填 TCP端口 默认是25
     ];
