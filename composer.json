@@ -3,7 +3,10 @@
     "description": "A common extension library",
     "type": "library",
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.5.0",
+        "siriusphp/upload": "^2.1",
+        "phpoffice/phpexcel": "1.8.*",
+        "phpmailer/phpmailer": "^6.0"
     },
     "license": "mit",
     "authors": [
