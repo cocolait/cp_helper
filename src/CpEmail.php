@@ -1,5 +1,7 @@
 <?php
 namespace cocolait\helper;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 /**
  * 邮箱管理类 无需继承任何类
  * Created by PhpStorm.
