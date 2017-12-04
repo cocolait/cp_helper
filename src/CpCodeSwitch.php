@@ -35,7 +35,7 @@ class CpCodeSwitch {
 	 * @param string $out_charset	转换后的文件编码,与iconv使用的参数一致
      * @return void
      */
-	static function DetectAndSwitch($filename,$out_charset) {
+	 public static function  DetectAndSwitch($filename,$out_charset) {
 		$fpr = fopen($filename,"r");
 		$char1 = fread($fpr,1);
 		$char2 = fread($fpr,1);
@@ -138,7 +138,7 @@ class CpCodeSwitch {
 	 * @param int $maxdepth		遍历深度,-1表示遍历到最底层
      * @return void
      */
-	static function searchdir($path,$mode = "FULL",$file_types = array(".html",".php"),$maxdepth = -1,$d = 0) {
+ 	public static function searchdir($path,$mode = "FULL",$file_types = array(".html",".php"),$maxdepth = -1,$d = 0) {
 	   if(substr($path,strlen($path)-1) != '/')
 		   $path .= '/';
 	   $dirlist = array();
@@ -186,18 +186,18 @@ class CpCodeSwitch {
      * @param array $file_types		文件后缀过滤数组
      * @return void
      */
-	static function CodingSwitch($app = "./",$charset='UTF-8',$mode = "FILES",$file_types = array(".html",".php")) {
+	public static function CodingSwitch($app = "./",$charset='UTF-8',$mode = "FILES",$file_types = array(".html",".php")) {
 		self::info("注意: 程序使用的文件编码检测算法可能对某些特殊字符不适用");
 		$filearr = self::searchdir($app,$mode,$file_types);
 		foreach($filearr as $file)
 			self::DetectAndSwitch($file,$charset);
 	}
 
-    static public function getError() {
+	public static function getError() {
         return self::$error;
     }
 
-    static public function getInfo() {
+	public static function getInfo() {
         return self::$info;
     }
 }

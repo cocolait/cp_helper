@@ -29,7 +29,7 @@ final class CpEmail{
      * @param array $attachment 添加压缩包或者文件或者图片 ['文件的名称' => '文件的绝对路径']
      * @return array
      */
-    public function send($address,$subject,$content,$mail_option = [], $cc = [],$attachment = [])
+    public static function send($address,$subject,$content,$mail_option = [], $cc = [],$attachment = [])
     {
         if (!$mail_option['send_name'] || !$mail_option['host'] || !$mail_option['username'] || !$mail_option['password']) {
             return ['error' => 1, 'msg' => '配置参数填写不完整'];
