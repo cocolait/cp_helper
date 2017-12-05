@@ -31,7 +31,7 @@ final class CpEmail{
      */
     public static function send($address,$subject,$content,$mail_option = [], $cc = [],$attachment = [])
     {
-        if (!$mail_option['send_name'] || !$mail_option['host'] || !$mail_option['username'] || !$mail_option['password']) {
+        if (empty($mail_option['send_name']) || empty($mail_option['host']) || empty($mail_option['username']) || empty($mail_option['password'])) {
             return ['error' => 1, 'msg' => '配置参数填写不完整'];
         }
         if (!$address) return ['error' => 1, 'msg' => '收件人不能为空'];
@@ -48,13 +48,13 @@ final class CpEmail{
             $mail->Username = $mail_option['username'];           // SMTP 用户名
             // SMTP 密码 企业邮箱就是邮箱登录密码  个人邮箱开通SMTP服务那么就是 SMTP授权码
             $mail->Password = $mail_option['password'];
-            if (!$mail_option['smtp_secure']) {
+            if (empty($mail_option['smtp_secure'])) {
                 // 加密方式 'tls' 或者 'ssl' 一般使用默认设置即可
                 $mail->SMTPSecure = 'tls';
             } else {
                 $mail->SMTPSecure = $mail_option['smtp_secure'];
             }
-            if (!$mail_option['port']) {
+            if (empty($mail_option['port'])) {
                 // TCP端口 默认是25  一般使用默认即可
                 $mail->Port = 25;
             } else {
@@ -77,10 +77,10 @@ final class CpEmail{
             }
             // 收件人回复邮箱设置 一般指定发件人邮箱看具体需求 第二个参数'收件人昵称'也是可选的
             $mail->addReplyTo($mail_option['username'], $mail_option['send_name']);
-            if (isset($cc['acc']) && $cc['acc']) {
+            if (isset($cc['acc']) && !empty($cc['acc'])) {
                 $mail->addCC($cc['acc']);//抄送
             }
-            if (isset($cc['bcc']) && $cc['bcc']) {
+            if (isset($cc['bcc']) && !empty($cc['bcc'])) {
                 $mail->addBCC($cc['bcc']);//密送
             }
 
