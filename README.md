@@ -14,7 +14,7 @@ composer require cocolait/cp_helper
 # 版本要求
 > PHP >= 5.5
 
-# 部分使用案例
+# 使用案例
 ```php
 //发送邮件
 $mail_option = [
