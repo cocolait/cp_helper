@@ -1,11 +1,6 @@
 <?php
 namespace cocolait\helper;
 /** php下载类,支持断点续传
- *  Date:  2013-06-30
- *  Author: test
- *  Ver:  1.0
- *
- *  Func:
  *  download: 下载文件
  *  setSpeed: 设置下载速度
  *  getRange: 获取header中Range

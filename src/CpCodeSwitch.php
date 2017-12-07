@@ -8,6 +8,13 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+/**
+ * Created by PhpStorm.
+ * User: Cocolait
+ * Date: 2017/12/7
+ * Time: 11:08
+ * 博  客：http://www.mgchen.com
+ */
 namespace cocolait\helper;
 class CpCodeSwitch {
     // 错误信息

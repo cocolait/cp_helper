@@ -14,7 +14,14 @@ namespace cocolait\helper;
  *  由于使用UTF8编码 如果使用纯真IP地址库的话 需要对返回结果进行编码转换
  * @author    liu21st <liu21st@gmail.com>
  */
-class IpLocation {
+/**
+ * Created by PhpStorm.
+ * User: Cocolait
+ * Date: 2017/12/7
+ * Time: 11:08
+ * 博  客：http://www.mgchen.com
+ */
+class CpIp {
     /**
      * QQWry.Dat文件指针
      *

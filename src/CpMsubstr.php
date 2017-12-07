@@ -3,7 +3,7 @@
  * 字符串处理类
  * Created by PhpStorm.
  * User: Cocolait
- * Date: 2016/12/16
+ * Date: 2017/12/7
  * Time: 11:08
  * 博  客：http://www.mgchen.com
  */

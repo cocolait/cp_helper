@@ -12,13 +12,16 @@
 namespace cocolait\helper;
 /**
  * 日期时间操作类
- * @category   ORG
- * @package  ORG
- * @subpackage  Date
  * @author    liu21st <liu21st@gmail.com>
- * @version   $Id: Date.class.php 2662 2012-01-26 06:32:50Z liu21st $
  */
-class Date {
+/**
+ * Created by PhpStorm.
+ * User: Cocolait
+ * Date: 2017/12/7
+ * Time: 11:08
+ * 博  客：http://www.mgchen.com
+ */
+class CpDate {
 
     /**
      * 日期的时间戳
