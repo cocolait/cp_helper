@@ -31,11 +31,6 @@ composer require cocolait/cp_helper
 # 版本要求
 > PHP >= 5.5
 
-# 项目中已依赖的包
-- "siriusphp/upload": "^2.1"
-- "phpoffice/phpexcel": "1.8.*"
-- "phpmailer/phpmailer": "^6.0"
-
 # 部分使用案例
 ```php
 //发送邮件
