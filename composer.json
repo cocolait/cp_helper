@@ -9,7 +9,7 @@
         "phpmailer/phpmailer": "^6.0",
         "endroid/qrcode": "1.9.*"
     },
-    "license": "mit",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "cocolait",
