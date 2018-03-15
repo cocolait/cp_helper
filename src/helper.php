@@ -29,6 +29,69 @@ if (!function_exists('p')) {
     }
 }
 
+if (!function_exists('del_dir')) {
+    /**
+     * 删除目录以及目录下的所有文件
+     * @param $dir 目录路径
+     * @return bool
+     */
+    function del_dir($dir) {
+        if (!is_dir($dir)) {
+            return false;
+        }
+        $handle = opendir($dir);
+        while (($file = readdir($handle)) !== false) {
+            if ($file != "." && $file != "..") {
+                is_dir("$dir/$file") ? del_dir("$dir/$file") : @unlink("$dir/$file");
+            }
+        }
+        if (readdir($handle) == false) {
+            closedir($handle);
+            @rmdir($dir);
+        }
+    }
+}
+
+
+if (!function_exists('addFileToZip')) {
+    /**
+     * TODO 将文件夹打包成zip文件
+     * PHP ZipArchive是PHP自带的扩展类
+     * 可以轻松实现ZIP文件的压缩和解压，使用前首先要确保PHP ZIP扩展已经开启
+     * 将文件夹打包成zip文件
+     * 添加文件到zip包中
+     * @param $path 目录路径
+     * @param $zip  PHP ZipArchive是PHP自带的扩展类 对象
+     * 使用案例：
+     *  $zip=new \ZipArchive();
+        if (!file_exists('./Data/img/15773677249.zip')) {
+            // 经过多次测试 在处理压缩ZIP文件包时 必须先创建zip包文件不然ZIP OPEN会打不开
+            // 创建压缩包
+            $fp = fopen("./Data/img/15773677249.zip", "w");
+            fclose($fp);
+        }
+        if($zip->open('./Data/img/15773677249.zip', \ZipArchive::OVERWRITE) === TRUE){
+            addFileToZip('./Data/img/15773677249', $zip); //调用方法，对要打包的根目录进行操作，并将ZipArchive的对象传递给方法
+            $zip->close(); //关闭处理的zip文件
+            // 压缩处理完毕 删除目录以及目录所有文件
+            del_dir('./Data/img/15773677249');
+        }
+     */
+    function addFileToZip($path,$zip){
+        $handler=opendir($path); //打开当前文件夹由$path指定。
+        while(($filename=readdir($handler))!==false){
+            if($filename != "." && $filename != ".."){//文件夹文件名字为'.'和‘..’，不要对他们进行操作
+                if(is_dir($path."/".$filename)){// 如果读取的某个对象是文件夹，则递归
+                    addFileToZip($path."/".$filename, $zip);
+                }else{ //将文件加入zip对象
+                    $zip->addFile($path."/".$filename,$filename);//向压缩包中添加文件 第二个参数可以定义别名
+                }
+            }
+        }
+        @closedir($path);
+    }
+}
+
 if (!function_exists('cp_display_p')) {
     /**
      * 格式化打印数据

@@ -9,6 +9,9 @@
  */
 namespace cocolait\helper;
 final class CpMsubstr{
+
+
+
     /**
      * 生成UUID 单机使用
      * @access public
@@ -24,6 +27,8 @@ final class CpMsubstr{
             .substr($charid,16, 4).$hyphen
             .substr($charid,20,12)
             .chr(125);// "}"
+        // 去除左右的{}
+        // $uuid = substr(substr($uuid,0,-1),1);
         return $uuid;
     }
 

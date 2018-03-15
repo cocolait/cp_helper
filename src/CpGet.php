@@ -13,11 +13,10 @@ final class CpGet{
      * 远程路径保存文件到指定目录
      * @param $url 远程路径
      * @param string $save_dir  保存的目录
-     * @param string $filename  保存的文件名
      * @param int $type         保存的方式 0 服务缓存区保存方式 1：curl获取保存 默认curl方式保存
      * @return array ['file_name' => 文件名称,'save_path' => 保存的全路径 ,'error' => 错误码 ,'time' => '花费的时间']
      */
-    public static function getImage($url,$type=1,$save_dir='',$filename=''){
+    public static function getImage($url,$type=1,$save_dir=''){
         $start_time = time();
         if(trim($url)==''){
             return ['file_name'=>'','save_path'=>'','error'=>1];
@@ -29,17 +28,21 @@ final class CpGet{
             if (!file_exists($save_dir)) {
                 mkdir($save_dir,0777,true);
             }
-        }
-
-        if(trim($filename)==''){
-            //保存文件名
-            $ext=strrchr($url,'.');
-            if ($ext != ".gif" || $ext != ".jpg" || $ext != ".png" || $ext != ".jpeg") {
-                $filename = "/" . 'face_' . date('YmdHis') . ".png";
-            } else {
-                $filename = "/" . 'face_' . date('YmdHis') . $ext;
+        } else {
+            if (!file_exists($save_dir)) {
+                mkdir($save_dir,0777,true);
             }
         }
+
+        // 判断文件的后缀
+        $ext=strrchr($url,'.');
+
+        if ($ext != ".gif" && $ext != ".jpg" && $ext != ".png" && $ext != ".jpeg") {
+            $filename = "/" . CpMsubstr::uuid() . ".png";
+        } else {
+            $filename = "/" . CpMsubstr::uuid() . $ext;
+        }
+
         //获取远程文件所采用的方法
         if($type){
             $ch=curl_init();
@@ -47,6 +50,7 @@ final class CpGet{
             curl_setopt($ch,CURLOPT_URL,$url);
             curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
             curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $img=curl_exec($ch);
             curl_close($ch);
         }else{
