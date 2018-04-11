@@ -29,7 +29,7 @@ if (!function_exists('p')) {
     }
 }
 
-if (!function_exists('del_dir')) {
+if (!function_exists('cp_del_dir')) {
     /**
      * 删除目录以及目录下的所有文件
      * @param $dir 目录路径
@@ -53,7 +53,7 @@ if (!function_exists('del_dir')) {
 }
 
 
-if (!function_exists('addFileToZip')) {
+if (!function_exists('cp_addFileToZip')) {
     /**
      * TODO 将文件夹打包成zip文件
      * PHP ZipArchive是PHP自带的扩展类
@@ -89,6 +89,104 @@ if (!function_exists('addFileToZip')) {
             }
         }
         @closedir($path);
+    }
+}
+
+if (!function_exists('cp_rand_award')) {
+    /**
+     * TODO 抽奖概率算法
+     * 不同概率的抽奖原理就是把0到*（比重总数）的区间分块
+     * 分块的依据是物品占整个的比重，再根据随机数种子来产生0-* 中的某个数
+     * 判断这个数是落在哪个区间上，区间对应的就是抽到的那个物品。
+     * 随机数理论上是概率均等的，那么相应的区间所含数的多少就体现了抽奖物品概率的不同。
+     * 案例：
+     * $arr = [
+        ['id'=>1,'name'=>'特等奖','v'=>1],
+        ['id'=>2,'name'=>'一等奖','v'=>5],
+        ['id'=>3,'name'=>'二等奖','v'=>10],
+        ['id'=>4,'name'=>'三等奖','v'=>120],
+        ['id'=>5,'name'=>'四等奖','v'=>22],
+        ['id'=>6,'name'=>'没中奖','v'=>50]
+     ];
+     * 测试1W次的结果 TODO 权重值越大 中奖概率越大
+     * Array
+        (
+            [6] => 2449
+            [4] => 5751
+            [3] => 489
+            [5] => 1056
+            [2] => 220
+            [1] => 35
+        )
+     * @param $proArr 被抽奖的数组
+     * @return array
+     */
+    function cp_rand_award($proArr) {
+        $result = array();
+        foreach ($proArr as $key => $val) {
+            $arr[$key] = $val['v'];
+        }
+        // 概率数组的总概率
+        $proSum = array_sum($arr);
+        asort($arr);
+        // 概率数组循环
+        foreach ($arr as $k => $v) {
+            $randNum = mt_rand(1, $proSum);
+            if ($randNum <= $v) {
+                $result = $proArr[$k];
+                break;
+            } else {
+                $proSum -= $v;
+            }
+        }
+        return $result;
+    }
+}
+
+if (!function_exists('cp_rand_award_2')) {
+    /**
+     * 不推荐使用
+     * TODO 抽奖概率算法 02
+     * 测试1W次的结果 TODO 权重值越大 中奖概率越大
+     * Array
+     (
+        [6] => 5076
+        [2] => 475
+        [5] => 2255
+        [3] => 1010
+        [4] => 1184
+     )
+     * @param $proArr
+     * @return array
+     */
+    function cp_rand_award_2($proArr)
+    {
+        $result = array();
+        foreach ($proArr as $key => $val) {
+            $arr[$key] = $val['v'];
+        }
+        $proSum = array_sum($arr);      // 计算总权重
+        $randNum = mt_rand(1, $proSum);
+        $d1 = 0;
+        $d2 = 0;
+        for ($i=0; $i < count($arr); $i++)
+        {
+            $d2 += $arr[$i];
+            if($i==0)
+            {
+                $d1 = 0;
+            }
+            else
+            {
+                $d1 += $arr[$i-1];
+            }
+            if($randNum >= $d1 && $randNum <= $d2)
+            {
+                $result = $proArr[$i];
+            }
+        }
+        unset ($arr);
+        return $result;
     }
 }
 
