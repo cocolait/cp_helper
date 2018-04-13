@@ -203,6 +203,7 @@ if (!function_exists('cp_display_p')) {
     }
 }
 
+
 if (!function_exists('cp_object2array')) {
     /**
      * 对象转换为数组
@@ -222,18 +223,16 @@ if (!function_exists('cp_object2array')) {
     }
 }
 
-if (!function_exists('cp_think_encrypt')) {
+if (!function_exists('cp_encrypt')) {
     /**
-     * 系统加密方法
+     * 加密方法
      * @param string $data 要加密的字符串
      * @param string $key  加密密钥
      * @param int $expire  过期时间 单位 秒
      * @return string
-     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
-    function cp_think_encrypt($data, $key = '', $expire = 0) {
-        $md5_key  = 'http://www.cocolait.cn';
-        $key  = md5(empty($key) ? $md5_key : $key);
+    function cp_encrypt($data, $key = '', $expire = 0) {
+        $key  = md5(empty($key) ? '' : $key);
         $data = base64_encode($data);
         $x    = 0;
         $len  = strlen($data);
@@ -255,17 +254,15 @@ if (!function_exists('cp_think_encrypt')) {
     }
 }
 
-if (!function_exists('cp_think_decrypt')) {
+if (!function_exists('cp_decrypt')) {
     /**
-     * 系统解密方法
-     * @param  string $data 要解密的字符串 （必须是think_encrypt方法加密的字符串）
+     * 解密方法
+     * @param  string $data 要解密的字符串 （必须是cp_encrypt方法加密的字符串）
      * @param  string $key  加密密钥
      * @return string
-     * @author 麦当苗儿 <zuojiazi@vip.qq.com>
      */
-    function cp_think_decrypt($data, $key = ''){
-        $md5_key  = 'http://www.cocolait.cn';
-        $key    = md5(empty($key) ? $md5_key : $key);
+    function cp_decrypt($data, $key = ''){
+        $key    = md5(empty($key) ? '' : $key);
         $data   = str_replace(array('-','_'),array('+','/'),$data);
         $mod4   = strlen($data) % 4;
         if ($mod4) {
@@ -297,6 +294,44 @@ if (!function_exists('cp_think_decrypt')) {
             }
         }
         return base64_decode($str);
+    }
+}
+
+if (!function_exists('cp_encrypt_info')) {
+    /**
+     * 加密信息集合
+     * @param $data
+     * @return string
+     */
+    function cp_encrypt_info($data)
+    {
+        $temp = [];
+        foreach ($data as $k => $v) {
+            $temp[] = $v . '#' . $k;
+        }
+        return cp_encrypt(implode(',',$temp));
+    }
+}
+
+if (!function_exists('cp_decrypt_info')) {
+    /**
+     * 解密信息集合 [必须是 cp_encrypt_info 加密]
+     * @param $str
+     * @return array
+     */
+    function cp_decrypt_info($str)
+    {
+        $temp = [];
+        $info  = cp_decrypt($str);
+        $data = explode(',',$info);
+        foreach ($data as $k => $v) {
+            $temp[] = explode('#',$v);
+        }
+        $return = [];
+        foreach ($temp as $k => $v) {
+            $return[$v[1]] = $v[0];
+        }
+        return $return;
     }
 }
 
