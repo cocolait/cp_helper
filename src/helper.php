@@ -29,20 +29,20 @@ if (!function_exists('p')) {
     }
 }
 
-if (!function_exists('cp_del_dir')) {
+if (!function_exists('cp_delDir')) {
     /**
      * 删除目录以及目录下的所有文件
      * @param $dir 目录路径
      * @return bool
      */
-    function del_dir($dir) {
+    function cp_delDir($dir) {
         if (!is_dir($dir)) {
             return false;
         }
         $handle = opendir($dir);
         while (($file = readdir($handle)) !== false) {
             if ($file != "." && $file != "..") {
-                is_dir("$dir/$file") ? del_dir("$dir/$file") : @unlink("$dir/$file");
+                is_dir("$dir/$file") ? cp_delDir("$dir/$file") : @unlink("$dir/$file");
             }
         }
         if (readdir($handle) == false) {
@@ -52,6 +52,72 @@ if (!function_exists('cp_del_dir')) {
     }
 }
 
+
+if (!function_exists('cp_setCacheFile')) {
+    /**
+     * 设置缓存文件
+     * @param string $fileName 文件名
+     * @param string $cacheData 内容
+     * @param string $suffix 文件后缀
+     * @param string $dir 存储路径 前面不带'/'
+     * @return array
+     */
+    function cp_setCacheFile($fileName, $cacheData, $suffix = '.php', $dir = 'cache_data/temp/')
+    {
+        $file_path = ROOT_PATH . '/' . $dir .  $fileName . $suffix;
+        $bool = cp_directory(ROOT_PATH . '/' . $dir);
+        if (!$bool) return ['msg' => '目录创建失败'];
+        $my_file = fopen($file_path, "w");
+        if ($suffix == '.php') {
+            $content = "<?php\r\n";
+            $content .= "return " . var_export($cacheData, true) . ";\r\n";
+            $content .= "?>";
+        } else {
+            $content = $cacheData . "\r\n";
+        }
+        fwrite($my_file, $content);
+        fclose($my_file);
+    }
+}
+
+if (!function_exists('cp_directory')) {
+    /**
+     * 递归创建目录
+     * @param $dir
+     * @return bool
+     */
+    function cp_directory($dir){
+        return  is_dir($dir) or directory(dirname($dir)) and  @mkdir($dir,0777,true);
+    }
+}
+
+if (!function_exists('cp_getCacheFile')) {
+    /**
+     * 获取缓存文件里面的数据
+     * @param string $fileName 文件名
+     * @param string $suffix 后缀
+     * @param string $dir 目录名 前面不带‘/’
+     * @return array
+     */
+    function cp_getCacheFile($fileName, $suffix = '.php', $dir = 'cache_data/temp/')
+    {
+        $file = $fileName  . $suffix;
+        $result = [];
+        if (!empty($result[$fileName]))
+        {
+            return $result[$fileName];
+        }
+        $cacheFilePath = ROOT_PATH . '/' . $dir . $file;
+        if (file_exists($cacheFilePath))
+        {
+            $data = include($cacheFilePath);
+            $result[$fileName] = $data;
+            return $result[$fileName];
+        } else {
+            return $result;
+        }
+    }
+}
 
 if (!function_exists('cp_addFileToZip')) {
     /**
@@ -77,12 +143,12 @@ if (!function_exists('cp_addFileToZip')) {
             del_dir('./Data/img/15773677249');
         }
      */
-    function addFileToZip($path,$zip){
+    function cp_addFileToZip($path,$zip){
         $handler=opendir($path); //打开当前文件夹由$path指定。
         while(($filename=readdir($handler))!==false){
             if($filename != "." && $filename != ".."){//文件夹文件名字为'.'和‘..’，不要对他们进行操作
                 if(is_dir($path."/".$filename)){// 如果读取的某个对象是文件夹，则递归
-                    addFileToZip($path."/".$filename, $zip);
+                    cp_addFileToZip($path."/".$filename, $zip);
                 }else{ //将文件加入zip对象
                     $zip->addFile($path."/".$filename,$filename);//向压缩包中添加文件 第二个参数可以定义别名
                 }
@@ -92,7 +158,7 @@ if (!function_exists('cp_addFileToZip')) {
     }
 }
 
-if (!function_exists('cp_rand_award')) {
+if (!function_exists('cp_randAward')) {
     /**
      * TODO 抽奖概率算法
      * 不同概率的抽奖原理就是把0到*（比重总数）的区间分块
@@ -121,7 +187,7 @@ if (!function_exists('cp_rand_award')) {
      * @param $proArr 被抽奖的数组
      * @return array
      */
-    function cp_rand_award($proArr) {
+    function cp_randAward($proArr) {
         $result = array();
         foreach ($proArr as $key => $val) {
             $arr[$key] = $val['v'];
@@ -143,7 +209,7 @@ if (!function_exists('cp_rand_award')) {
     }
 }
 
-if (!function_exists('cp_rand_award_2')) {
+if (!function_exists('cp_randAward_2')) {
     /**
      * 不推荐使用
      * TODO 抽奖概率算法 02
@@ -159,7 +225,7 @@ if (!function_exists('cp_rand_award_2')) {
      * @param $proArr
      * @return array
      */
-    function cp_rand_award_2($proArr)
+    function cp_randAward_2($proArr)
     {
         $result = array();
         foreach ($proArr as $key => $val) {
@@ -193,7 +259,7 @@ if (!function_exists('cp_rand_award_2')) {
 if (!function_exists('cp_display_p')) {
     /**
      * 格式化打印数据
-     * @param $data 需要打印的数据
+     * @param array $data 需要打印的数据
      */
     function cp_display_p($data){
         header("Content-type:text/html;charset=utf-8");
@@ -204,22 +270,21 @@ if (!function_exists('cp_display_p')) {
 }
 
 
-if (!function_exists('cp_object2array')) {
+if (!function_exists('cp_objectToArray')) {
     /**
-     * 对象转换为数组
-     * @param $object
+     * 对象数据递归转换成数组
+     * @param $obj
      * @return mixed
      */
-    function cp_object2array($object) {
-        if (is_object($object)) {
-            foreach ($object as $key => $value) {
-                $array[$key] = $value;
-            }
+    function cp_objectToArray($obj)
+    {
+        $_arr = is_object($obj) ? get_object_vars($obj) : $obj;
+        foreach ($_arr as $key => $val)
+        {
+            $val = (is_array($val) || is_object($val)) ? cp_object_to_array($val) : $val;
+            $arr[$key] = $val;
         }
-        else {
-            $array = $object;
-        }
-        return $array;
+        return $arr;
     }
 }
 
@@ -297,13 +362,13 @@ if (!function_exists('cp_decrypt')) {
     }
 }
 
-if (!function_exists('cp_encrypt_info')) {
+if (!function_exists('cp_encryptInfo')) {
     /**
      * 加密信息集合
      * @param $data
      * @return string
      */
-    function cp_encrypt_info($data)
+    function cp_encryptInfo($data)
     {
         $temp = [];
         foreach ($data as $k => $v) {
@@ -313,13 +378,13 @@ if (!function_exists('cp_encrypt_info')) {
     }
 }
 
-if (!function_exists('cp_decrypt_info')) {
+if (!function_exists('cp_decryptInfo')) {
     /**
      * 解密信息集合 [必须是 cp_encrypt_info 加密]
      * @param $str
      * @return array
      */
-    function cp_decrypt_info($str)
+    function cp_decryptInfo($str)
     {
         $temp = [];
         $info  = cp_decrypt($str);
@@ -335,26 +400,26 @@ if (!function_exists('cp_decrypt_info')) {
     }
 }
 
-if (!function_exists('cp_encrypt_password')) {
+if (!function_exists('cp_encryptPassword')) {
     /**
      * 密码加密方法
      * @param string $pw 要加密的字符串
      * @return string
      */
-    function cp_encrypt_password($pw,$authcode='http://www.cocolait.cn'){
+    function cp_encryptPassword($pw,$authcode='https://mgchen.com'){
         return md5(md5(md5($authcode . $pw)));
     }
 }
 
-if (!function_exists('cp_compare_password')) {
+if (!function_exists('cp_comparePassword')) {
     /**
      * 密码比较方法
      * @param string $password 要比较的密码
      * @param string $password_in_db 数据库保存的已经加密过的密码
      * @return boolean 密码相同，返回true
      */
-    function cp_compare_password($password,$password_in_db){
-        if (encrypt_password($password) == $password_in_db) {
+    function cp_comparePassword($password,$password_in_db){
+        if (cp_encryptPassword($password) == $password_in_db) {
             return true;
         } else {
             return false;
@@ -363,26 +428,26 @@ if (!function_exists('cp_compare_password')) {
 }
 
 
-if (!function_exists('cp_keyWrods_replace')) {
+if (!function_exists('cp_keyWrodsReplace')) {
     /**
      * 替换关键字并且写入样式
      * @param $keywords 查询的关键字
      * @param $content  查询的内容
      * @return mixed
      */
-    function cp_keyWrods_replace($keywords,$content){
+    function cp_keyWrodsReplace($keywords,$content){
         $str = "<span style='color: #D2322D;font-weight: 700;'>{$keywords}</span>";
         return str_replace($keywords,$str,$content);
     }
 }
 
-if (!function_exists('cp_time_format')) {
+if (!function_exists('cp_timeFormat')) {
     /**
      * 格式化时间
      * @param $time
      * @return bool|string
      */
-    function cp_time_format($time){
+    function cp_timeFormat($time){
         //获取当前时间
         $now = time();
         //今天零时零分零秒
@@ -441,13 +506,13 @@ if (!function_exists('cp_isEmail')) {
     }
 }
 
-if (!function_exists('cp_is_url')) {
+if (!function_exists('cp_isUrl')) {
     /**
      * 验证是否是URL地址
      * @param  string  $email 邮箱
      * @return boolean  是否是邮箱
      */
-    function cp_is_url($url){
+    function cp_isUrl($url){
         if(filter_var($url,FILTER_VALIDATE_URL)){
             return true;
         }else{
@@ -457,13 +522,13 @@ if (!function_exists('cp_is_url')) {
 }
 
 
-if (!function_exists('cp_is_ip')) {
+if (!function_exists('cp_isIp')) {
     /**
      * 验证是否是URL地址
      * @param  string  $email 邮箱
      * @return boolean  是否是邮箱
      */
-    function cp_is_ip($ip){
+    function cp_isIp($ip){
         if(filter_var($ip,FILTER_VALIDATE_IP)){
             return true;
         }else{
@@ -472,13 +537,13 @@ if (!function_exists('cp_is_ip')) {
     }
 }
 
-if (!function_exists('cp_replace_phone')) {
+if (!function_exists('cp_replacePhone')) {
     /**
      * 替换手机号码
      * @param $str
      * @return string
      */
-    function cp_replace_phone($str){
+    function cp_replacePhone($str){
         $start = substr($str,0,3);
         $end = substr($str,-4);
         return $start . "****" . $end;
@@ -513,12 +578,13 @@ if (!function_exists('cp_cutEmailUrl')) {
 }
 
 if (!function_exists('cp_randomFloat')) {
+
     /**
      * 随机生成0~0.1之间的数,并且保留指定位数
+     * @param int $num 要取多少位数 默认2位
+     * @param bool $type 返回类型 true ：四舍五入制返回指定位数 false : 不是四舍五入
      * @param int $min 最小值
      * @param float $max 最大值
-     * @param int $num  要取多少位数 默认2位
-     * @param int $type 返回类型 true ：四舍五入制返回指定位数 false : 不是四舍五入
      * @return string
      */
     function cp_randomFloat($num = 2, $type = true, $min = 0, $max = 0.1) {
@@ -534,13 +600,13 @@ if (!function_exists('cp_randomFloat')) {
     }
 }
 
-if (!function_exists('cp_mbs_strlen')) {
+if (!function_exists('cp_mbsStrlen')) {
     /**
      * 计算中英文字符长度
      * @param $str
      * @return int
      */
-    function cp_mbs_strlen($str){
+    function cp_mbsStrlen($str){
         preg_match_all("/./us", $str, $matches);
         return count(current($matches));
     }
@@ -550,7 +616,7 @@ if (!function_exists('cp_mbs_strlen')) {
 if (!function_exists('cp_checkEvenNum')) {
     /**
      * 检测数字是否为偶数
-     * @param $num 数值
+     * @param integer $num 数值
      * @return bool
      */
     function cp_checkEvenNum($num)
@@ -566,8 +632,8 @@ if (!function_exists('cp_checkEvenNum')) {
 if (!function_exists('cp_isArraySame')) {
     /**
      * 比较2个数组是否相等 二维数组
-     * @param $arr1 数组1
-     * @param $arr2 数组2
+     * @param array $arr1 数组1
+     * @param array $arr2 数组2
      * @return bool
      */
     function cp_isArraySame ($arr1,$arr2){
@@ -584,15 +650,15 @@ if (!function_exists('cp_isArraySame')) {
     }
 }
 
-if (!function_exists('cp_array_sort')) {
+if (!function_exists('cp_arraySort')) {
     /**
      * 二维数组 指定字段排序
-     * @param $array  要排序的数组
-     * @param $row    排序依据列 指定的键位
-     * @param $type   排序类型[asc or desc]
+     * @param array $array   要排序的数组
+     * @param string $row    排序依据列 指定的键位
+     * @param string $type   排序类型[asc or desc]
      * @return array  排好序的数组
      */
-    function cp_array_sort($array,$row,$type){
+    function cp_arraySort($array,$row,$type){
         $array_temp = array();
         foreach($array as $v){
             $array_temp[$v[$row]] = $v;
@@ -607,7 +673,7 @@ if (!function_exists('cp_array_sort')) {
     }
 }
 
-if (!function_exists('cp_get_ip_info')) {
+if (!function_exists('cp_getIpInfo')) {
     /**
      * 获取ip的详细信息
      * 163.125.127.241
@@ -616,7 +682,7 @@ if (!function_exists('cp_get_ip_info')) {
      * @param $ip ip地址
      * @return mixed
      */
-    function cp_get_ip_info($ip)
+    function cp_getIpInfo($ip)
     {
         // 淘宝开源api 淘宝IP地址库
         $taobaoUrl = 'http://ip.taobao.com/service/getIpInfo.php?ip=' . $ip;
@@ -634,14 +700,14 @@ if (!function_exists('cp_get_ip_info')) {
     }
 }
 
-if (!function_exists('cp_get_client_ip')) {
+if (!function_exists('cp_getClientIp')) {
     /**
      * 获取客户端IP地址
      * @param integer $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
      * @param boolean $adv 是否进行高级模式获取（有可能被伪装）
      * @return mixed
      */
-    function cp_get_client_ip($type = 0,$adv=false) {
+    function cp_getClientIp($type = 0,$adv=false) {
         $type       =  $type ? 1 : 0;
         static $ip  =   NULL;
         if ($ip !== NULL) return $ip[$type];
